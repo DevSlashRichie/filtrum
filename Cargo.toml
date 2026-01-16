@@ -3,21 +3,30 @@ name = "filtrum"
 version = "0.1.0"
 edition = "2024"
 
+[workspace]
+members = ["filtrum-derive"]
+
 [dependencies]
 regex = "1.12.2"
 serde = { version = "1", features = ["derive"] }
 thiserror = "2.0.17"
 axum = { version = "0.8", optional = true }
+filtrum-derive = { path = "filtrum-derive", optional = true }
+sqlx = { version = "0.8", optional = true }
 
 [dev-dependencies]
 serde_json = "1"
 axum = "0.8"
 tokio = { version = "1", features = ["full"] }
 tower = "0.5"
+filtrum-derive = { path = "filtrum-derive" }
+sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite"] }
 
 [features]
 default = []
 axum = ["dep:axum"]
+derive = ["dep:filtrum-derive"]
+sqlx = ["dep:sqlx"]
 
 [lib]
 name = "filtrum"

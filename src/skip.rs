@@ -3,6 +3,20 @@ use crate::{
     errors::FilterParseError,
 };
 
+/// Represents a skip/offset (pagination) value.
+///
+/// Parses `skip=N` from the query string.
+///
+/// # Example
+///
+/// ```rust
+/// use filtrum::skip::Skip;
+///
+/// let query = "skip=10";
+/// let skip = Skip::from_str(query).unwrap().unwrap();
+///
+/// assert_eq!(skip.0, 10);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Skip(pub u64);
 

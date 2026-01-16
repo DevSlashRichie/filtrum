@@ -11,13 +11,20 @@ use crate::{
     filter_id::FilterId,
 };
 
+/// Represents numerical comparison operations.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum NumberFilter<T> {
+    /// Equal (`=`). Query param: `field[eq]=10` or `field=10` (inferred).
     Eq(T),
+    /// Not equal (`<>` or `!=`). Query param: `field[ne]=10`.
     Ne(T),
+    /// Greater than (`>`). Query param: `field[gt]=10`.
     Gt(T),
+    /// Less than (`<`). Query param: `field[lt]=10`.
     Lt(T),
+    /// Greater than or equal (`>=`). Query param: `field[gte]=10`.
     Gte(T),
+    /// Less than or equal (`<=`). Query param: `field[lte]=10`.
     Lte(T),
 }
 
@@ -37,14 +44,29 @@ impl<T> FromStrFilter<T> for NumberFilter<T> {
     }
 }
 
+/// A collection of number filters applied to a specific field.
+///
+/// # Example
+///
+/// ```rust
+/// use filtrum::number_filter::{NumberFilters, NumberFilter};
+///
+/// let query = "age[gte]=18&age[lt]=65";
+/// let filters = NumberFilters::<i32>::from_str("age", query).unwrap();
+///
+/// assert!(filters.0.contains(&NumberFilter::Gte(18)));
+/// assert!(filters.0.contains(&NumberFilter::Lt(65)));
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub struct NumberFilters<T>(pub Vec<NumberFilter<T>>, pub Option<FilterId>);
 
 impl<T: FromStr> NumberFilters<T> {
+    /// Parses number filters from a query string for a specific search ID.
     pub fn from_str(search_id: &str, value: &str) -> Result<Self, FilterParseError> {
         Self::from_id_value(search_id.to_string().into(), value)
     }
 
+    /// Parses number filters from a query string for a specific `FilterId`.
     pub fn from_id_value(search_id: FilterId, value: &str) -> Result<Self, FilterParseError> {
         from_str(search_id.id(), value).map(|x| Self(x, Some(search_id)))
     }

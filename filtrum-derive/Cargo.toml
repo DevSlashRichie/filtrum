@@ -1,0 +1,14 @@
+[package]
+name = "filtrum-derive"
+version = "0.1.0"
+edition = "2021"
+lib = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "2", features = ["full", "extra-traits"] }
+quote = "1"
+proc-macro2 = "1"
+darling = "0.20"

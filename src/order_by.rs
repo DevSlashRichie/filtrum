@@ -4,9 +4,28 @@ use crate::{
     filter_id::FilterId,
 };
 
+/// Represents sorting instructions.
+///
+/// Parses `order_by[asc]=field` or `order_by[desc]=field`.
+///
+/// # Example
+///
+/// ```rust
+/// use filtrum::order_by::OrderBy;
+///
+/// let query = "order_by[desc]=created_at";
+/// let order = OrderBy::from_str(query).unwrap().unwrap();
+///
+/// match order {
+///     OrderBy::Desc(id) => assert_eq!(id.id(), "created_at"),
+///     _ => panic!("Expected Desc"),
+/// }
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OrderBy {
+    /// Ascending order.
     Asc(FilterId),
+    /// Descending order.
     Desc(FilterId),
 }
 

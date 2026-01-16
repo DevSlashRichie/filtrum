@@ -3,6 +3,20 @@ use crate::{
     errors::FilterParseError,
 };
 
+/// Represents a limit (pagination) value.
+///
+/// Parses `limit=N` from the query string.
+///
+/// # Example
+///
+/// ```rust
+/// use filtrum::limit::Limit;
+///
+/// let query = "limit=20";
+/// let limit = Limit::from_str(query).unwrap().unwrap();
+///
+/// assert_eq!(limit.0, 20);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Limit(pub u64);
 

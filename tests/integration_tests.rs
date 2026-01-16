@@ -33,8 +33,9 @@ impl FromStr for UserFilter {
 
 #[test]
 fn test_complex_query_parsing() {
-    let query = "name[sw]=Ali&age[gte]=18&age[lt]=30&active=true&limit=10&skip=5&order_by[desc]=age";
-    
+    let query =
+        "name[sw]=Ali&age[gte]=18&age[lt]=30&active=true&limit=10&skip=5&order_by[desc]=age";
+
     let filter = FromQueryFilter::<UserFilter>::from_str(query).expect("Failed to parse query");
 
     // Check inner filters
@@ -51,7 +52,7 @@ fn test_complex_query_parsing() {
     // Check query params
     assert_eq!(filter.limit.map(|l| l.0), Some(10));
     assert_eq!(filter.skip.map(|s| s.0), Some(5));
-    
+
     match filter.order_by {
         Some(filtrum::order_by::OrderBy::Desc(id)) => assert_eq!(id.id(), "age"),
         _ => panic!("Expected Desc order by age"),
@@ -61,8 +62,9 @@ fn test_complex_query_parsing() {
 #[test]
 fn test_empty_query() {
     let query = "";
-    let filter = FromQueryFilter::<UserFilter>::from_str(query).expect("Failed to parse empty query");
-    
+    let filter =
+        FromQueryFilter::<UserFilter>::from_str(query).expect("Failed to parse empty query");
+
     assert!(filter.inner.name.0.is_empty());
     assert!(filter.inner.age.0.is_empty());
     assert_eq!(filter.inner.active.into_inner(), None);

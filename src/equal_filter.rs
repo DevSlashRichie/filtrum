@@ -6,14 +6,31 @@ use crate::{
     filter_id::FilterId,
 };
 
+/// A simple filter for exact equality.
+///
+/// This is typically used for boolean flags or when only a single value is allowed (no ranges or partial matches).
+/// It parses `field=value` into `Some(value)`.
+///
+/// # Example
+///
+/// ```rust
+/// use filtrum::equal_filter::EqualFilter;
+///
+/// let query = "is_active=true";
+/// let filter = EqualFilter::<bool>::from_str("is_active", query).unwrap();
+///
+/// assert_eq!(filter.into_inner(), Some(true));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct EqualFilter<T>(pub Option<T>, pub Option<FilterId>);
 
 impl<T> EqualFilter<T> {
+    /// Consumes the filter and returns the inner value, if present.
     pub fn into_inner(self) -> Option<T> {
         self.0
     }
 
+    /// Returns a reference to the inner value, if present.
     pub fn as_ref(&self) -> Option<&T> {
         self.0.as_ref()
     }

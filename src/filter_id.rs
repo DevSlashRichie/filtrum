@@ -21,6 +21,14 @@ impl FilterId {
             FilterId::WithPrefixAndAlias(prefix, _, _) => Some(prefix),
         }
     }
+
+    pub fn key(&self) -> &str {
+        match self {
+            FilterId::Alone(id) => id,
+            FilterId::WithPrefix(_, id) => id,
+            FilterId::WithPrefixAndAlias(_, _, alias) => alias,
+        }
+    }
 }
 
 impl From<String> for FilterId {

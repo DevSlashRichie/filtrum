@@ -8,14 +8,24 @@ use crate::{
     filter_id::FilterId,
 };
 
+/// Represents various string comparison operations.
+///
+/// This enum corresponds to common string filtering operations found in databases and APIs.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum StringFilter<T = String> {
+    /// Exact match (`=`). Query param: `field[eq]=value` or `field=value` (inferred).
     Eq(T),
+    /// Not equal (`<>` or `!=`). Query param: `field[ne]=value`.
     Ne(T),
+    /// SQL LIKE match. Query param: `field[like]=value` or `field[l]=value`.
     Like(T),
+    /// SQL NOT LIKE match. Query param: `field[not_like]=value` or `field[nl]=value`.
     NotLike(T),
+    /// Starts with match (`LIKE 'value%'`). Query param: `field[starts_with]=value` or `field[sw]=value`.
     StartsWith(T),
+    /// Ends with match (`LIKE '%value'`). Query param: `field[ends_with]=value` or `field[ew]=value`.
     EndsWith(T),
+    /// Contains match (`LIKE '%value%'`). Query param: `field[contains]=value` or `field[c]=value`.
     Contains(T),
 }
 
@@ -43,6 +53,22 @@ where
     }
 }
 
+/// A collection of string filters applied to a specific field.
+///
+/// This struct holds a list of `StringFilter`s that should be applied to the field identified by `FilterId`.
+///
+/// # Example
+///
+/// ```rust
+/// use filtrum::string_filter::{StringFilters, StringFilter};
+/// use std::str::FromStr; // Import the trait!
+///
+/// let query = "name[sw]=Al&name[ne]=Alice";
+/// let filters = StringFilters::<String>::from_str("name", query).unwrap();
+///
+/// assert!(filters.0.contains(&StringFilter::StartsWith("Al".to_string())));
+/// assert!(filters.0.contains(&StringFilter::Ne("Alice".to_string())));
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub struct StringFilters<T = String>(pub Vec<StringFilter<T>>, pub Option<FilterId>)
 where
@@ -52,10 +78,12 @@ impl<T> StringFilters<T>
 where
     T: FromStr + Display,
 {
+    /// Parses string filters from a query string for a specific search ID.
     pub fn from_str(search_id: &str, value: &str) -> Result<Self, FilterParseError> {
         Self::from_id_value(search_id.to_string().into(), value)
     }
 
+    /// Parses string filters from a query string for a specific `FilterId`.
     pub fn from_id_value(search_id: FilterId, value: &str) -> Result<Self, FilterParseError> {
         from_str(search_id.id(), value).map(|x| Self(x, Some(search_id)))
     }
