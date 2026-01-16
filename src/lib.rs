@@ -9,3 +9,6 @@ pub mod query_filter;
 pub mod regex;
 pub mod skip;
 pub mod string_filter;
+
+#[cfg(feature = "axum")]
+pub mod axum;
